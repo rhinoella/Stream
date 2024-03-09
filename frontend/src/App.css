@@ -1,3 +1,19 @@
+/* App.css */
+.App {
+  display: flex;
+  justify-content: center; /* Aligns children (components) on the main axis (horizontally for row direction) */
+  align-items: center; /* Aligns children (components) on the cross axis (vertically for row direction) */
+  min-height: 100vh; /* 100% of the viewport height */
+  text-align: center; /* Centers the inline content like text */
+  flex-direction: column; /* Arranges children (components) in a column (top to bottom) */
+}
+
+.BalanceDisplay,
+.SalariesAllocation {
+  width: 100%; /* You can set a specific width if necessary */
+  margin: 0 auto; /* Auto margin on both sides will center the block if it has a width */
+}
+
 #root {
   max-width: 1280px;
   margin: 0 auto;
