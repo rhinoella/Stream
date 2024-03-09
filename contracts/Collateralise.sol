@@ -2,9 +2,10 @@
 pragma solidity ^0.8.20;
 
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
+import {EllipticCurveParameters} from "./EllipticCurveParameters.sol";
 import {PedersenCommitment} from "./PedersenCommitment.sol";
 
-contract Collateralise is Ownable {
+contract Collateralise is Ownable, PedersenCommitment {
     // Mapping from company to verkle root
     mapping(address => bool) public isCompanyRegistered;
     mapping(address => Ledger) public companyLedgers;
@@ -27,7 +28,7 @@ contract Collateralise is Ownable {
     error InsufficientFunds();
 
     event FundsTransfered(address company, address to, uint256 x, uint256 y);
-    event Collateralise(address company, uint256 amount);
+    event AssetsCollateralised(address company, uint256 amount);
 
     constructor () Ownable(msg.sender) {}
 
@@ -40,16 +41,13 @@ contract Collateralise is Ownable {
 
     function registerLedger() public {
         isCompanyRegistered[msg.sender] = true;
-        companyLedgers[msg.sender] = Ledger(
-            msg.sender,
-            Commit(0, 0)
-        );
+        companyLedgers[msg.sender] = Ledger(msg.sender, 0, Commit(0, 0), Commit(0, 0));
     }
 
     function collateraliseAssets(uint256 _bindingFactor) public payable onlyRegistered() {
-        (uint256 x, uint256 y) = PedersenCommitment.commit(_bindingFactor, msg.value);
+        (uint256 x, uint256 y) = commit(_bindingFactor, msg.value);
 
-        (uint256 xTot, uint256 yTot) = PedersenCommitment.eAdd(
+        (uint256 xTot, uint256 yTot) = eAdd(
             x, y, companyLedgers[msg.sender].totalBalanceCommit.x, companyLedgers[msg.sender].totalBalanceCommit.y
         );
         companyLedgers[msg.sender].totalBalanceCommit.x = xTot;
@@ -61,13 +59,15 @@ contract Collateralise is Ownable {
             revert InsufficientFunds();
         }
 
-        (uint256 xAlloc, uint256 yAlloc) = PedersenCommitment.commit(_bindingFactor, _amount);
-        (uint256 xRemaining, uint256 yRemaining) = PedersenCommitment.eSub(
+        (uint256 xAlloc, uint256 yAlloc) = commit(_bindingFactor, _amount);
+        (uint256 xRemaining, uint256 yRemaining) = eSub(
             companyLedgers[msg.sender].totalRevenue.x, companyLedgers[msg.sender].totalRevenue.y, xAlloc, yAlloc
         );
 
         companyLedgers[msg.sender].totalRevenue = Commit(xRemaining, yRemaining);
-        allocations[_to] = PedersenCommitment.eAdd(allocations[_to].x, allocations[_to].y, xAlloc, yAlloc);
+        (uint256 xTot, uint256 yTot) = eAdd(allocations[_to].x, allocations[_to].y, xAlloc, yAlloc);
+        allocations[_to].x = xTot;
+        allocations[_to].y = yTot;
 
         emit FundsTransfered(msg.sender, _to, xAlloc, yAlloc);
     }
