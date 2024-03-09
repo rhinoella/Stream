@@ -36,10 +36,10 @@ const SalariesAllocation = ({ onAllocateSalary }) => {
         <div key={employee.id}>
           {employee.name}
           <input
-            type="number"
+            type="text"
             value={employee.salary}
             onChange={(e) => handleSalaryChange(employee.id, e.target.value)}
-            min="0"
+            placeholder={0}
           /> USD
           <button onClick={() => removeEmployee(employee.id)}>Remove</button>
         </div>
