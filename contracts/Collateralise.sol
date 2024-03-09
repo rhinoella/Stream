@@ -71,17 +71,10 @@ contract Collateralise is Ownable {
 
         emit FundsTransfered(msg.sender, _to, xAlloc, yAlloc);
     }
-    
-    function moveFunds(address _from, uint256 _amount, uint256 _bindingFactor) public onlyRegistered() {
-
-    }
 
     function verifyFunds(address _addr, uint256 _amount, uint256 _bindingFactor) public view returns (bool) {
         return PedersenCommitment.verify(_bindingFactor, _amount, allocations[_addr].x, allocations[_addr].y);
     }
-
-    function lock
-
 
     function withdraw(uint256 _amount) external onlyOwner {
         (bool sent,) = msg.sender.call{value: _amount}("");
