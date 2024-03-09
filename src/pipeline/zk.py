@@ -31,7 +31,7 @@ def witnesses(
 
 
 def verify(
-        user_commit: float, *, agg_commit: float, witness: float
+        user_commit: float, witness: float, *, agg_commit: float
 ) -> bool:
     """
     """
