@@ -29,24 +29,21 @@ const BalanceDisplay = ({ totalBalance, currentBalance }) => {
   
       const [_price, _timestamp, _decimals] =
           await ftsoRegistry["getCurrentPriceWithDecimals(string)"]("ETH");
-  
-      console.log(Number(_price));
 
       setEthPrice(Number(_price)/100000);
     }
 
     fetchEthPrice();
 
-  }, []);
-
-  const spent = totalBalance - currentBalance;
+}, []);
 
   return (
     <div>
       <h2>Total Balance: {totalBalance.toFixed(2)} USD</h2>
-      <small>{ethPrice != 0 ? (totalBalance/ethPrice).toFixed(4) : '...'} Ether</small>
-      <h2>Spent: {spent.toFixed(2)} USD - Remaining: {currentBalance.toFixed(2)} USD</h2>
-      <small>Spent: { ethPrice != 0 ? (spent/ethPrice).toFixed(4) : '...'} Ether - Remaining: {ethPrice != 0 ? (currentBalance/ethPrice).toFixed(4) : '...'} Ether</small>
+      <small>{ethPrice !== 0 ? (totalBalance / ethPrice).toFixed(4) : '...'} Ether</small>
+      <h2>Remaining: {currentBalance.toFixed(2)} USD</h2>
+      <small>Remaining: {ethPrice !== 0 ? (currentBalance / ethPrice).toFixed(4) : '...'} Ether</small>
+      {/* Removed the "Spent" display lines */}
     </div>
   );
 };

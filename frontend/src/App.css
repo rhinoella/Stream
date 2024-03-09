@@ -10,17 +10,27 @@
 }
 
 .App-header {
+  position: fixed; /* Make the header fixed at the top */
+  top: 0; /* Align to the top */
+  left: 0; /* Align to the left */
+  right: 0; /* Align to the right */
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 20px; /* Add padding to the left and right */
+  padding: 20px;
+  background: white; /* or any color that fits your design */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Optional: Adds a shadow for better visibility */
+  z-index: 1000; /* Ensures the header is above other content */
 }
 
-.company-name {
-  flex-grow: 1; /* This will push the button to the right */
-  margin-right: 700px; /* Adds some right margin to the company name */
-  font-size: 1.5rem; /* Adjust the font size as needed */
-  /* Other styling as needed */
+.nav-buttons {
+  display: flex;
+  gap: 20px; /* Adjust the gap to your preference */
+}
+
+.link-wallet-btn-container {
+  /* A container for the Link Wallet button to push it to the right */
+  margin-left: auto; /* This pushes the link wallet button to the right */
 }
 
 .link-wallet-btn {
@@ -30,15 +40,20 @@
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  /* Remove margin-right if you have padding on the header */
+}
+
+.App-main {
+  padding-top: 70px; /* Adjust this value to match the height of your header */
+  min-height: calc(100vh - 70px); /* Adjust 100vh to account for the fixed header */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Align content to the top */
 }
 
 .link-wallet-btn:hover {
   background-color: #45a049; /* Slightly darker variant for hover effect */
 }
-
-.BalanceDisplay,
-.SalariesAllocation {
+on {
   width: 100%; /* You can set a specific width if necessary */
   margin: 0 auto; /* Auto margin on both sides will center the block if it has a width */
 }
@@ -84,4 +99,126 @@
 
 .read-the-docs {
   color: #888;
+}
+
+.balance-display {
+  margin-bottom: 20px; /* Gives space before the salaries allocation section */
+}
+
+.spending-summary {
+  display: flex;
+  justify-content: space-between; /* Creates space between Spent info and Pay Salaries button */
+  align-items: center; /* Vertically centers items in this div */
+  padding: 20px; /* Adds padding around the content */
+  width: 100%; /* Ensures it spans the width of the container */
+  max-width: 600px; /* Max-width to match design, can adjust as needed */
+  margin: 20px auto; /* Centers the summary in the available space */
+}
+
+.spent {
+  flex: 1; /* Allows Spent info to grow and fill available space */
+  text-align: left; /* Aligns the text to the left */
+}
+
+.pay-salaries-btn {
+  /* Matches the Pay Salaries button to the size of the Spent info */
+  padding: 10px 20px;
+  background-color: #4CAF50; /* Green background */
+  color: white; /* White text */
+  border: none; /* No border */
+  border-radius: 5px; /* Rounded corners */
+  cursor: pointer; /* Pointer cursor on hover */
+  white-space: nowrap; /* Prevents text wrapping */
+}
+
+/* BankPage CSS */
+
+/* This ensures the whole page container is centered */
+.bank-page-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin-top: 20px; /* Adjust as needed for spacing from header */
+}
+
+/* This centers the text for total balance */
+.total-balance {
+  text-align: center;
+  margin-bottom: 20px; /* Adds space between balance and transaction list */
+}
+
+/* This ensures the transactions are aligned left within the centered container */
+.transactions {
+  width: 100%;
+  text-align: left;
+  padding: 0 20px; /* Adds padding on the sides */
+}
+
+/* Styling for individual transactions */
+.transaction-item {
+  margin-bottom: 20px; /* Adds space between transactions */
+}
+
+/* Styling for the transaction details for clarity and spacing */
+.transaction-details {
+  margin-bottom: 10px; /* Adds space between details of a transaction */
+}
+
+/* Styling for the horizontal rule to separate transactions */
+.transaction-separator {
+  border: 0;
+  height: 1px;
+  background-color: #ddd; /* Light grey color for the separator */
+  margin: 20px 0; /* Adds vertical space around the separator */
+}
+
+.audit-page-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: left;
+}
+
+.total-balance {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.integrity-status {
+  font-size: 1.2em;
+  color: green;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.transactions {
+  border-top: 1px solid #eee;
+  padding-top: 20px;
+}
+
+.transaction-item {
+  margin-bottom: 15px;
+}
+
+.transaction-details {
+  background-color: #f9f9f9;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 5px;
+}
+
+.transaction-separator {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border: none;
+  height: 1px;
+  background-color: #eee;
+}
+
+/* Ensure the layout doesn't break on smaller screens */
+@media (max-width: 768px) {
+  .audit-page-container {
+    padding: 10px;
+  }
 }
