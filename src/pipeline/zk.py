@@ -13,7 +13,7 @@ def commit(
         current_poly = item * s ** (len(poly_coeff) - idx - 1)
         poly += current_poly
         user_commits.append(g ** current_poly)
-    return g ** poly, current_poly
+    return g ** poly, user_commits
 
 
 def witnesses(
