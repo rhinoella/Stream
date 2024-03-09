@@ -7,7 +7,7 @@ def main() -> None:
     Define the transaction 'data' in the poly_coeff
     Define the elliptic constant 'g'
 
-    Verifies ownership of individual transaction data via zk
+    Verifies ownership of individual transaction data via zk.
     """
     s = 1.
     poly_coeff = [1., 2., 3., 4., 5., 6.]

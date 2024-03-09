@@ -5,7 +5,7 @@ def commit(
         s: float, *, poly_coeff: list, g: float
 ) -> Tuple[float, list[float]]:
     """
-    Commits transaction data as a polynomial pool
+    Commits transaction data as a polynomial pool.
     """
     poly = 0.
     user_commits = []
@@ -20,7 +20,7 @@ def witnesses(
         s: float, *, poly_coeff: list, g: float  
 ) -> list[float]:
     """
-    Produces witness parameters for individual data holders
+    Produces witness parameters for individual data holders.
     """
     witness_array = []
     for idx in range(len(poly_coeff)):
@@ -36,6 +36,6 @@ def verify(
         user_commit: float, witness: float, *, agg_commit: float
 ) -> bool:
     """
-    Verifies ownership of data via zk
+    Verifies ownership of data via zk.
     """
     return agg_commit / witness == user_commit
