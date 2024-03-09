@@ -1,4 +1,5 @@
 /* App.css */
+
 .App {
   display: flex;
   justify-content: center; /* Aligns children (components) on the main axis (horizontally for row direction) */
@@ -6,6 +7,34 @@
   min-height: 100vh; /* 100% of the viewport height */
   text-align: center; /* Centers the inline content like text */
   flex-direction: column; /* Arranges children (components) in a column (top to bottom) */
+}
+
+.App-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px; /* Add padding to the left and right */
+}
+
+.company-name {
+  flex-grow: 1; /* This will push the button to the right */
+  margin-right: 700px; /* Adds some right margin to the company name */
+  font-size: 1.5rem; /* Adjust the font size as needed */
+  /* Other styling as needed */
+}
+
+.link-wallet-btn {
+  padding: 10px 20px;
+  background-color: #4CAF50; /* Example color */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  /* Remove margin-right if you have padding on the header */
+}
+
+.link-wallet-btn:hover {
+  background-color: #45a049; /* Slightly darker variant for hover effect */
 }
 
 .BalanceDisplay,

@@ -42,6 +42,10 @@ const App = () => {
 
   return (
     <div className="App">
+      <header className="App-header">
+        <h2 className="company-name">Company</h2>
+        <button className="link-wallet-btn">Link a Wallet</button>
+      </header>
       <BalanceDisplay totalBalance={totalBalance} currentBalance={currentBalance} />
       <SalariesAllocation
         employees={employees}
