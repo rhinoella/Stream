@@ -1,4 +1,4 @@
-def commit(
+def agg_commit(
         s: float, *, poly_coeff: list, g: float
 ) -> float:
     """
@@ -22,3 +22,11 @@ def witness(
                 poly += item * s ** (len(poly_coeff) - idx_0 - 1)
         witness_array.append(g ** poly)
     return witness_array
+
+
+def verify(
+        user_commit: float, *, agg_commit: float, witness: float
+) -> bool:
+    """
+    """
+    return agg_commit / witness == user_commit
