@@ -3,12 +3,17 @@ from pipeline import zk
 
 def main() -> None:
     """
+    Define sectet value 's'
+    Define the transaction 'data' in the poly_coeff
+    Define the elliptic constant 'g'
+
+    Verifies ownership of individual transaction data via zk
     """
     s = 1.
     poly_coeff = [1., 2., 3., 4., 5., 6.]
     g = 1.
 
-    agg_commit, user_commits = zk.agg_commit(
+    agg_commit, user_commits = zk.commit(
         s, poly_coeff=poly_coeff, g=g
     )
     witnesses = zk.witnesses(
