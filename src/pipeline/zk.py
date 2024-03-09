@@ -1,13 +1,19 @@
+from typing import Tuple
+
+
 def agg_commit(
         s: float, *, poly_coeff: list, g: float
-) -> float:
+) -> Tuple[float, list[float]]:
     """
     """
     poly = 0.
+    user_commits = []
     for idx, item in enumerate(poly_coeff):
-        poly += item * s ** (len(poly_coeff) - idx - 1)
-    return g ** poly
-    
+        current_poly = item * s ** (len(poly_coeff) - idx - 1)
+        poly += current_poly
+        user_commits.append(g ** current_poly)
+    return g ** poly, current_poly
+
 
 def witnesses(
         s: float, *, poly_coeff: list, g: float  
