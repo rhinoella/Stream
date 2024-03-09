@@ -15,9 +15,9 @@ const SalariesAllocation = ({ onAllocateSalary }) => {
       employee.id === id ? { ...employee, salary: parseFloat(salary) || 0 } : employee
     );
     setEmployees(updatedSalaries);
-    onAllocateSalary(updatedSalaries); // Use the prop function name consistently
+    onAllocateSalary(updatedSalaries); // Make sure this function updates the parent state
   };
-
+  
   const addEmployee = () => {
     const newId = generateId();
     setEmployees([...employees, { id: newId, name: `Employee${newId}`, salary: 0 }]);

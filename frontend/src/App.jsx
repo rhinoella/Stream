@@ -6,46 +6,47 @@ import './App.css';
 
 const App = () => {
   const [totalBalance, setTotalBalance] = useState(10000); // Example total balance
+  // We don't need to deduct from totalBalance on salary change, so we use another state to track the current balance
+  const [currentBalance, setCurrentBalance] = useState(10000); // Initialize current balance the same as total balance
   const [employees, setEmployees] = useState([
     { id: 1, name: 'Employee1', salary: 0 },
     { id: 2, name: 'Employee2', salary: 0 },
     { id: 3, name: 'Employee3', salary: 0 },
   ]);
 
-  const handleSalaryChange = (updatedEmployees) => {
-    setEmployees(updatedEmployees); // Update the employees state
+  // This function updates the salaries of employees whenever there's a change in the input fields
+  const handleAllocateSalary = (updatedEmployees) => {
+    setEmployees(updatedEmployees);
+    // Calculate the total allocated salaries
     const totalSalaries = updatedEmployees.reduce((total, employee) => total + (employee.salary || 0), 0);
-    setTotalBalance(prevTotalBalance => prevTotalBalance - totalSalaries); // Deduct salaries from total balance
+    // Update the current balance based on allocated salaries
+    setCurrentBalance(totalBalance - totalSalaries);
   };
 
+  // Function to process the payment of salaries
   const paySalaries = () => {
-    // Here you could implement the logic to actually pay salaries, e.g., sending data to a backend API.
     const totalSalaries = employees.reduce((total, employee) => total + (employee.salary || 0), 0);
-    
-    if (totalSalaries > totalBalance) {
-      alert("Insufficient funds to pay salaries.");
-      return;
+    if (totalSalaries <= totalBalance) {
+      // If there are enough funds, deduct the total salaries from the total balance
+      setTotalBalance(totalBalance - totalSalaries);
+      // Reset the employee salaries after payment
+      const resetEmployees = employees.map(employee => ({ ...employee, salary: 0 }));
+      setEmployees(resetEmployees);
+      // Reset the current balance to the new total balance
+      setCurrentBalance(totalBalance - totalSalaries);
+      alert('Salaries paid!');
+    } else {
+      alert('Not enough balance to pay salaries');
     }
-
-    // If sufficient funds, pay salaries
-    setTotalBalance(prevTotalBalance => prevTotalBalance - totalSalaries);
-    
-    // Reset each employee's salary to 0 after payment
-    const resetSalaries = employees.map(employee => ({ ...employee, salary: 0 }));
-    setEmployees(resetSalaries);
-
-    alert('Salaries paid!');
   };
-
-  const currentBalance = totalBalance - employees.reduce((sum, { salary }) => sum + salary, 0);
 
   return (
     <div className="App">
       <BalanceDisplay totalBalance={totalBalance} currentBalance={currentBalance} />
-      <SalariesAllocation 
+      <SalariesAllocation
         employees={employees}
-        onSalaryChange={handleSalaryChange}
-        onPaySalaries={paySalaries} 
+        onAllocateSalary={handleAllocateSalary}
+        onPaySalaries={paySalaries}
       />
     </div>
   );
