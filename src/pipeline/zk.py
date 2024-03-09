@@ -7,9 +7,9 @@ def agg_commit(
     for idx, item in enumerate(poly_coeff):
         poly += item * s ** (len(poly_coeff) - idx - 1)
     return g ** poly
+    
 
-
-def witness(
+def witnesses(
         s: float, *, poly_coeff: list, g: float  
 ) -> list[float]:
     """
