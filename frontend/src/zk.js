@@ -1,7 +1,7 @@
 // Generator of cyclic group G
-const g = BigInt(3);
+const g = 3;
 // Secret
-const secret = BigInt(3);
+const secret = 2;
 // polynomial coefficients
 const polyCoeff = [1, 2, 3, 4, 5, 6];
 
@@ -9,12 +9,12 @@ const polyCoeff = [1, 2, 3, 4, 5, 6];
 
 // Ys is polynomial evaluated at secret point
 function commitPoly(polyCoeff) {
-    let poly = 0n;
+    let poly = 0;
     const userCommits = [];
     const elementPoly = [];
 
     for (let idx = 0; idx < polyCoeff.length; idx++) {
-        const currentPoly = polyCoeff[idx] * (secret ** (polyCoeff.length - BigInt(idx) - 1));
+        const currentPoly = polyCoeff[idx] * (secret ** (polyCoeff.length - idx - 1));
         elementPoly.push(currentPoly);
         poly += currentPoly;
         console.log(poly);
@@ -34,10 +34,10 @@ function generateWitnesses(polyCoeff) {
     const witnessArray = [];
 
     for (let idx = 0; idx < polyCoeff.length; idx++) {
-        let poly = 0n;
+        let poly = 0;
         for (let idx_0 = 0; idx_0 < polyCoeff.length; idx_0++) {
             if (idx !== idx_0) {
-                const currentPoly = polyCoeff[idx_0] * (secret ** (polyCoeff.length - BigInt(idx_0) - 1));
+                const currentPoly = polyCoeff[idx_0] * (secret ** (polyCoeff.length - idx_0 - 1));
                 poly += currentPoly;
             };
         };
@@ -64,4 +64,4 @@ for (let idx = 0; idx < witnesses.length; idx++) {
     verifications.push(verify(userCommits[idx], witnesses[idx], aggCommit))
 }
 
-export {g, secret, aggCommit, userCommits, witnesses, verifications};
+export {g, secret, aggCommit, userCommits, witnesses, verify};

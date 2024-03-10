@@ -1,15 +1,13 @@
 import React, { useState } from 'react';
-import { g, secret, commitPoly, generateWitnesses, verify } from "./zk";
+import {g, secret, aggCommit, userCommits, witnesses, verify} from "./zk";
 
 const ProofPage = () => {
     const [elCommit, setElCommit] = useState('');
     const [elWitness, setElWitness] = useState('');
     const [verified, setVerified] = useState(false);
+    const [verifiedMessage, setVerifiedMessage] = useState('');
 
-    //const commitVector = [ BigInt(3352), BigInt(2637), BigInt(1372), BigInt(2533)];
-    const commitVector = [ BigInt(1), BigInt(2), BigInt(3), BigInt(4)];
-
-    const [ aggCommit, witnesses, _ ] = commitPoly(commitVector, secret, g);
+    const commitVector = [1, 2, 3, 4, 5, 6];
 
     const handleElCommitChange = (e) => {
         setElCommit(e.target.value);
@@ -21,15 +19,15 @@ const ProofPage = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault(); 
-        setVerified(verify(BigInt(Number(elCommit)), BigInt(Number(elWitness)), aggCommit)); 
-        console.log(verified);
+        setVerified(verify(elCommit, elWitness, aggCommit));
+        verified ? setVerifiedMessage("Verified!") : setVerifiedMessage("Not a correct witness");
     }
 
     return(
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             <div><b>Secret:</b> {secret.toString()}</div>
             <div style={{ display: 'flex', gap: '20px', justifyContent: 'center' }}>
-                <div><b>Vector:</b> {commitVector.map((commit, i) => (
+                <div><b>Vector:</b> {userCommits.map((commit, i) => (
                     <div key={commit}>C<sub>{i}</sub> = {Number(commit)},</div>
                 ))}</div>
                 <div><b>Aggregated Witnesses:</b> {witnesses.map((witness, i) => (
@@ -56,6 +54,7 @@ const ProofPage = () => {
             <br/>
             <br/>
             <button type="submit">Go!</button>
+            {verifiedMessage}
             </form>
             {() => { return verified ? "This element is part of the vector!" : ""; }}
         </div>
