@@ -9,6 +9,8 @@ function getRandomInt(max) {
 
 describe("Collateralise", () => {
   const ONE_ETH = ethers.parseEther("1");
+  const TWO_ETH = ethers.parseEther("1");
+
     const deployContractFixture = async () => {
       const [bank] = await ethers.getSigners();
       // Deploying Collateralise Contract
@@ -20,9 +22,9 @@ describe("Collateralise", () => {
     
       await Collateralise.connect(company).registerLedger();
 
-      let bindingFactor = getRandomInt(500);
+      const bindingFactor = getRandomInt(500);
       await Collateralise.connect(company).collateraliseAssets(
-        bindingFactor, { value: ONE_ETH }
+        bindingFactor, { value: TWO_ETH }
       );
   
       return { bank, company, employee, Collateralise, bindingFactor };
@@ -42,20 +44,47 @@ describe("Collateralise", () => {
           deployContractFixture
         );
         expect(await Collateralise.isCompanyRegistered(company.address)).to.be.true;
-        expect(await ethers.provider.getBalance(Collateralise.target)).to.equal(ONE_ETH);
+        expect(await ethers.provider.getBalance(Collateralise.target)).to.equal(TWO_ETH);
       });
 
       it("Stores correct committed balance", async () => {
         const { company, Collateralise, bindingFactor } = await loadFixture(
           deployContractFixture
         );
-          const [ x, y ] = await Collateralise.commit(bindingFactor, ONE_ETH);
+          const [ x, y ] = await Collateralise.commit(bindingFactor, TWO_ETH);
           const ledger = await Collateralise.companyLedgers(company.address)
           expect(ledger.totalBalanceCommit.x).to.equal(x);
           expect(ledger.totalBalanceCommit.y).to.equal(y);
-          expect(await Collateralise.verify(bindingFactor, ONE_ETH, x, y)).to.be.true;
+          expect(await Collateralise.verify(bindingFactor, TWO_ETH, x, y)).to.be.true;
       });
 
-      it("Allocates funds", async () => {})
+      it("Allocates funds", async () => {
+        const { company, employee, Collateralise, bindingFactor } = await loadFixture(
+          deployContractFixture
+        );
+        const employeeBindingFactor = getRandomInt(8000);
+        const ledgerBeforeAlloc = await Collateralise.companyLedgers(company.address);
+        await Collateralise.connect(company).allocateFunds(employee, ONE_ETH, employeeBindingFactor);
+        const ledgerAfterAlloc = await Collateralise.companyLedgers(company.address);
+
+        const [ xAlloc, yAlloc ] = await Collateralise.commit(employeeBindingFactor, ONE_ETH);
+        expect(await Collateralise.verify(employeeBindingFactor, ONE_ETH, xAlloc, yAlloc)).to.be.true;
+
+        const [ xRemaining, yRemaining ] = await Collateralise.eSub(
+          ledgerBeforeAlloc.totalBalanceCommit.x, ledgerBeforeAlloc.totalBalanceCommit.y, xAlloc, yAlloc
+        );
+        
+        expect(await ledgerAfterAlloc.totalRevenue.x).to.equal(xRemaining);
+        expect(await ledgerAfterAlloc.totalRevenue.y).to.equal(yRemaining);
+
+        const [ xTot, yTot ] = await Collateralise.eAdd(xAlloc, yAlloc, xRemaining, yRemaining);
+
+        expect(await Collateralise.verify(bindingFactor, TWO_ETH, xTot, yTot)).to.be.true;
+
+        const employeeAllocation = await Collateralise.allocations(employee.address);
+
+        expect(await employeeAllocation.x).to.equal(xAlloc);
+        expect(await employeeAllocation.y).to.equal(yAlloc);
+      });
     });
 });

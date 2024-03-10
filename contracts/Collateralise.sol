@@ -50,6 +50,9 @@ contract Collateralise is Ownable, PedersenCommitment {
         (uint256 xTot, uint256 yTot) = eAdd(
             x, y, companyLedgers[msg.sender].totalBalanceCommit.x, companyLedgers[msg.sender].totalBalanceCommit.y
         );
+        companyLedgers[msg.sender].totalRevenue.x = xTot;
+        companyLedgers[msg.sender].totalRevenue.y = yTot;
+        companyLedgers[msg.sender].totalBalance += msg.value;
         companyLedgers[msg.sender].totalBalanceCommit.x = xTot;
         companyLedgers[msg.sender].totalBalanceCommit.y = yTot;
     }
@@ -65,9 +68,15 @@ contract Collateralise is Ownable, PedersenCommitment {
         );
 
         companyLedgers[msg.sender].totalRevenue = Commit(xRemaining, yRemaining);
-        (uint256 xTot, uint256 yTot) = eAdd(allocations[_to].x, allocations[_to].y, xAlloc, yAlloc);
-        allocations[_to].x = xTot;
-        allocations[_to].y = yTot;
+        if (allocations[_to].x != 0) {
+            (uint256 xTot, uint256 yTot) = eAdd(allocations[_to].x, allocations[_to].y, xAlloc, yAlloc);
+            allocations[_to].x = xTot;
+            allocations[_to].y = yTot;
+        }
+        else {
+            allocations[_to].x = xAlloc;
+            allocations[_to].y = yAlloc;
+        }
 
         emit FundsTransfered(msg.sender, _to, xAlloc, yAlloc);
     }
