@@ -6,6 +6,7 @@ from utils import checks
 
 def extract_primes(lims: Tuple[int, int]) -> list[int]:
     """
+    Returns a list of prime numbers within a given range of integers.
     """
     return [
         item 
@@ -16,5 +17,6 @@ def extract_primes(lims: Tuple[int, int]) -> list[int]:
 
 def select_prime(lims: Tuple[int, int]) -> int:
     """
+    Randomly selects a number from a list of inputs.
     """
     return random.choice(extract_primes(lims))

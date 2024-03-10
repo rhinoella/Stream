@@ -3,6 +3,7 @@ import math
 
 def is_prime(n: int) -> bool:
     """
+    Checks whether an input number is prime.
     """
     if n % 2 == 0 and n > 2:
         return False
