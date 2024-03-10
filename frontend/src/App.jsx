@@ -4,6 +4,7 @@ import { createWeb3Modal, defaultConfig } from '@web3modal/ethers/react'
 import CompanyPage from './CompanyPage';
 import BankPage from './BankPage';
 import AuditPage from './AuditPage';
+import ProofPage from './ProofPage';
 import './App.css';
 
 // 1. Get projectId
@@ -52,6 +53,7 @@ const App = () => {
         <button onClick={() => setActivePage(<CompanyPage/>)}>Company</button>
         <button onClick={() => setActivePage(<BankPage/>)}>Bank</button>
         <button onClick={() => setActivePage(<AuditPage/>)}>Audit</button>
+        <button onClick={() => setActivePage(<ProofPage/>)}>Zk Proofs</button>
         </div>
         <div className="spacer"></div>
         <div id="logo-group"><img src={"/streamIcon.png"} height={50} width={50}></img><p id="logo">stream</p></div>
