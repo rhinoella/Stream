@@ -1,7 +1,12 @@
 {
   "dependencies": {
     "@openzeppelin/contracts": "^5.0.2",
+<<<<<<< Updated upstream
     "chai": "^4.4.1"
+=======
+    "chai": "^4.4.1",
+    "dotenv": "^16.4.5"
+>>>>>>> Stashed changes
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^4.0.0",
