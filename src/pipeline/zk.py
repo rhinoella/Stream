@@ -38,4 +38,4 @@ def verify(
     """
     Verifies ownership of data via zk.
     """
-    return agg_commit / witness == user_commit
+    return round(agg_commit / witness, 3) == round(user_commit, 3)

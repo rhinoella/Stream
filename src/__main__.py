@@ -20,7 +20,7 @@ def main() -> None:
         s, poly_coeff=poly_coeff, g=g
     )
 
-    verifications = [
+    return [
         zk.verify(
             user_commit, agg_commit=agg_commit, witness=witness
         )
@@ -29,4 +29,4 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    verifications = main()
