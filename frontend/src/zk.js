@@ -1,7 +1,7 @@
 // Generator of cyclic group G
 const g = 3;
 // Secret
-const secret = 2;
+const secret = 1;
 // polynomial coefficients
 const polyCoeff = [1, 2, 3, 4, 5, 6];
 
