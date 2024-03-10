@@ -14,6 +14,7 @@
   top: 0; /* Align to the top */
   left: 0; /* Align to the left */
   right: 0; /* Align to the right */
+  color: black;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -21,6 +22,29 @@
   background: white; /* or any color that fits your design */
   box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Optional: Adds a shadow for better visibility */
   z-index: 1000; /* Ensures the header is above other content */
+}
+
+p {
+  margin: 0;
+}
+
+.spacer {
+  flex: 1;
+}
+
+#logo-group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding-bottom: 0.2em;
+  margin: 0;
+  width: min-content;
+}
+
+#logo {
+  font-size: 2.5em;
+  padding-left: 0.2em;
+  font: 400;
 }
 
 .nav-buttons {
