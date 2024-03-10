@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@flarenetwork/flare-periphery-contract-artifacts": "^0.1.7",
+    "@web3modal/ethers": "^4.0.13",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
