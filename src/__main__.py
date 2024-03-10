@@ -1,4 +1,4 @@
-from pipeline import zk
+from pipeline import elliptic, zk
 
 
 def main() -> None:
@@ -11,7 +11,7 @@ def main() -> None:
     """
     s = 1.
     poly_coeff = [1., 2., 3., 4., 5., 6.]
-    g = 1.
+    g = elliptic.select_prime((0, 20))
 
     agg_commit, user_commits = zk.commit(
         s, poly_coeff=poly_coeff, g=g

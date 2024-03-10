@@ -14,7 +14,7 @@ def extract_primes(lims: Tuple[int, int]) -> list[int]:
     ]
 
 
-def select_prime(input: list[int]) -> int:
+def select_prime(lims: Tuple[int, int]) -> int:
     """
     """
-    return random.choice(input)
+    return random.choice(extract_primes(lims))
