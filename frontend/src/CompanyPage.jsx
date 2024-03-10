@@ -1,20 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { useWeb3ModalProvider, useWeb3ModalAccount } from '@web3modal/ethers/react'
-import { BrowserProvider, Contract, formatEther, formatUnits, parseEther } from 'ethers'
+import { BrowserProvider, Contract, formatEther, formatUnits, ethers } from 'ethers'
 import BalanceDisplay from './BalanceDisplay';
 import SalariesAllocation from './SalariesAllocation';
 
 const FLARE_RPC = "https://flare-api.flare.network/ext/bc/C/rpc";
 
-const collateraliseContract = '0x617f3112bf5397D0467D315cC709EF968D9ba546'
 const collateraliseABI = [
-  'modifier onlyRegistered()',
   'function registerLedger() public',
-  'function collateraliseAssets(uint256 _bindingFactor) public payable onlyRegistered()',
-  'function allocateFunds(address _to, uint256 _amount, uint256 _bindingFactor) public onlyRegistered()'
+  'function collateraliseAssets(uint256 _bindingFactor) public payable',
+  'function allocateFunds(address _to, uint256 _amount, uint256 _bindingFactor) public'
 ]
 
-const CompanyPage = () => {
+const CompanyPage = ({handleEmployeesChanged}) => {
+  const [currency, setCurrency] = useState("ETH");
   const [totalUSDBalance, setTotalUSDBalance] = useState(0);
   const [totalETHBalance, setTotalETHBalance] = useState(0);
   const [currentBalance, setCurrentBalance] = useState(0);
@@ -28,6 +27,32 @@ const CompanyPage = () => {
   const [ethPrice, setEthPrice] = useState(0);
   const { address, chainId, isConnected } = useWeb3ModalAccount();
   const { walletProvider } = useWeb3ModalProvider();
+
+  const bindingFactor = 15;
+
+  const currencies = {
+    1: "ETH",
+    11155111: "SepoliaETH",
+    114 : "C2FLR",
+    128123: "XTZ",
+  }
+
+  const contracts = {
+    11155111: "0xd69ccf7056421e46e76cdb9e6073620c07fb2df2",
+    114 : "0x2296768e004acf7e77ba2f9f33077c33ff3572e7",
+    128123: "0xd1d98d4056f9bef513e3665e9a7e936cb42cfd34",
+  }
+
+
+  async function callAllocate() {
+    const MyContract = await ethers.getContractFactory("Collateralise");
+    const contract = MyContract.attach(
+      // The deployed contract address
+      "0xD1D98d4056f9bef513e3665E9A7E936Cb42cFD34"
+    );
+  
+    await contract.DoSomething();
+  }
 
   useEffect(() => {
     const fetchEthPrice = async () => {
@@ -49,7 +74,7 @@ const CompanyPage = () => {
           provider);
   
       const [_price, _timestamp, _decimals] =
-          await ftsoRegistry["getCurrentPriceWithDecimals(string)"]("ETH");
+          await ftsoRegistry["getCurrentPriceWithDecimals(string)"](currency);
 
       setEthPrice(Number(await _price));
     }
@@ -59,6 +84,7 @@ const CompanyPage = () => {
   }, [walletProvider, isConnected]);
 
   useEffect(() => {
+    setCurrency(currencies[chainId]);
     const getUserBalance = async () => {
       if (ethPrice && isConnected && walletProvider) {
         const ethersProvider = new BrowserProvider(walletProvider);
@@ -81,25 +107,46 @@ const CompanyPage = () => {
     setTotalSpent(totalSalaries);
     setTotalDue(parseFloat(totalSpent / ethPrice *100000).toFixed(4));
     setCurrentBalance(totalUSDBalance - totalSalaries);
+    handleEmployeesChanged(employees);
   };
 
-  const paySalaries = () => {
+  const register = async () => {
+    if (!isConnected) throw Error('User disconnected')
 
+    const ethersProvider = new BrowserProvider(walletProvider)
+    const signer = await ethersProvider.getSigner()
+    // The Contract object
+    const Collateralise = new Contract(contracts[chainId], collateraliseABI, signer)
+    await Collateralise.registerLedger();
   };
+
+  const paySalaries = async () => {
+    if (!isConnected) throw Error('User disconnected')
+
+    const ethersProvider = new BrowserProvider(walletProvider)
+    const signer = await ethersProvider.getSigner()
+    // The Contract object
+    const Collateralise = new Contract(contracts[chainId], collateraliseABI, signer)
+    const options = { value: ethers.utils.parseEther(totalDue) };
+    const transaction =  await Collateralise.collateraliseAssets(bindingFactor, options);
+    transaction.wait();
+  }
 
   return (
     <>
-      <BalanceDisplay totalUSDBalance={totalUSDBalance} totalETHBalance={totalETHBalance} currentBalance={currentBalance} ethPrice={ethPrice} />
+      <button onClick={register}>Register</button>
+      <BalanceDisplay totalUSDBalance={totalUSDBalance} totalETHBalance={totalETHBalance} currentBalance={currentBalance} ethPrice={ethPrice} currency={currency} />
+      <div>Your binding factor: {bindingFactor}</div>
       <SalariesAllocation
         employees={employees}
         onSalaryChange={handleAllocateSalary}
       />
       <div className="spending-summary">
         <div className="spent">
-          Due: {totalSpent.toFixed(2)} USD / {totalDue} ETH
+          Due: {totalSpent.toFixed(2)} USD / {totalDue} {currency}
           {/* Calculate and display the equivalent in Ether */}
         </div>
-        <button onClick={paySalaries} className="pay-salaries-btn">
+        <button className="pay-salaries-btn">
           Pay Salaries
         </button>
       </div>
