@@ -58,5 +58,4 @@ contract EllipticCurveParameters {
     {
         (_x2,_y2) = EllipticCurve.ecMul(_z,_x1,_y1,0,pp);
     }
-
 }

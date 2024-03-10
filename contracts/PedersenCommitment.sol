@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.5.10;
+pragma solidity ^0.8.20;
 
 /**
 ** Modified by Noella Spitz 2024. Original liscence:
@@ -29,11 +29,8 @@ pragma solidity 0.5.10;
 
 import "../libs/EllipticCurve.sol";
 import "./EllipticCurveParameters.sol";
-import "./SafeMath.sol";
 
 contract PedersenCommitment is EllipticCurveParameters {
-    using SafeMath for uint256;
-
     uint256 public H;
 
     modifier isHSet( ){
@@ -45,7 +42,7 @@ contract PedersenCommitment is EllipticCurveParameters {
         internal
         isHSet
     {
-        uint256 TH = uint256( keccak256(abi.encodePacked(now,msg.sender)));
+        uint256 TH = uint256( keccak256(abi.encodePacked(block.timestamp, msg.sender)));
         uint256 _p = pp;
         assembly{
             TH := mod(TH,_p)
